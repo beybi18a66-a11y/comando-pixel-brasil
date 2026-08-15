@@ -19,6 +19,16 @@
  */
 
 @theme inline {
+  --font-pixel: "Press Start 2P", "Courier New", monospace;
+  --color-hud-text: var(--hud-text);
+  --color-hud-dim: var(--hud-dim);
+  --color-hud-accent: var(--hud-accent);
+  --color-hud-heart: var(--hud-heart);
+  --color-hud-panel: var(--hud-panel);
+  --color-hud-frame: var(--hud-frame);
+  --color-hud-overlay: var(--hud-overlay);
+  --color-radar-bg: var(--radar-bg);
+  --shadow-arcade: 0 0 0 4px var(--hud-panel), 0 24px 60px -12px oklch(0 0 0 / 0.8);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -62,9 +72,26 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
+  --radius: 0rem;
+  /* COMANDO BRASIL — arcade militar 16-bit */
+  --hud-text: oklch(0.96 0.02 95);
+  --hud-dim: oklch(0.74 0.03 120);
+  --hud-accent: oklch(0.82 0.17 105);
+  --hud-heart: oklch(0.6 0.21 27);
+  --hud-panel: oklch(0.24 0.04 140);
+  --hud-frame: oklch(0.38 0.06 130);
+  --hud-shadow: oklch(0.16 0.03 140);
+  --hud-overlay: oklch(0.16 0.03 145 / 0.93);
+  --radar-bg: oklch(0.18 0.04 155);
+  --radar-grid: oklch(0.42 0.09 155 / 0.45);
+  --radar-land: oklch(0.32 0.08 150);
+  --radar-line: oklch(0.75 0.16 150);
+  --radar-glow: oklch(0.85 0.18 150);
+  --radar-pin: oklch(0.82 0.17 95);
+  --radar-ping: oklch(0.72 0.2 40);
+  --radar-locked: oklch(0.45 0.02 150);
+  --background: oklch(0.14 0.02 145);
+  --foreground: oklch(0.96 0.02 95);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.129 0.042 264.695);
   --popover: oklch(1 0 0);
@@ -140,5 +167,20 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+  }
+}
+
+@layer components {
+  .amazonas-chip {
+    background: linear-gradient(160deg, #2c6b45, #123b2c 60%, #1d4a5c);
+  }
+  .sertao-chip {
+    background: linear-gradient(160deg, #f3d27a, #b8703a 60%, #6d3a1f);
+  }
+  .capixaba-chip {
+    background: linear-gradient(160deg, #63b3d6, #1e4f7a 60%, #6c7a86);
+  }
+  .rocinha-chip {
+    background: linear-gradient(160deg, #c86a4e, #4a3a52 60%, #241c28);
   }
 }
