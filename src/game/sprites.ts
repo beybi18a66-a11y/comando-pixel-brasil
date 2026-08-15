@@ -35,10 +35,11 @@ export const PAL = {
 };
 
 /** Pixel rect helper bound to a sprite origin, scale and horizontal flip. */
+let INK = false;
 export function pen(ctx: Ctx, ox: number, oy: number, s: number, flip: boolean, w: number) {
   return (x: number, y: number, rw: number, rh: number, color: string) => {
     const fx = flip ? w - x - rw : x;
-    ctx.fillStyle = color;
+    ctx.fillStyle = INK ? "#0d0b10" : color;
     ctx.fillRect(Math.round(ox + fx * s), Math.round(oy + y * s), Math.ceil(rw * s), Math.ceil(rh * s));
   };
 }
@@ -46,47 +47,24 @@ export function pen(ctx: Ctx, ox: number, oy: number, s: number, flip: boolean, 
 
 // --- SNK-style black contour: every character is drawn onto a scratch buffer
 // and stamped around itself in dark ink before the coloured sprite goes down.
-let scratch: HTMLCanvasElement | null = null;
 export function outlined(
   ctx: Ctx,
-  bx: number,
-  by: number,
-  bw: number,
-  bh: number,
+  _bx: number,
+  _by: number,
+  _bw: number,
+  _bh: number,
   fn: (c: Ctx) => void,
-  ink = "#100d14",
   th = 3,
 ) {
-  if (typeof document === "undefined") {
-    fn(ctx);
-    return;
-  }
-  if (!scratch) scratch = document.createElement("canvas");
-  const pad = th + 2;
-  const w = Math.ceil(bw + pad * 2);
-  const h = Math.ceil(bh + pad * 2);
-  if (scratch.width < w) scratch.width = w;
-  if (scratch.height < h) scratch.height = h;
-  const c = scratch.getContext("2d");
-  if (!c) {
-    fn(ctx);
-    return;
-  }
-  c.setTransform(1, 0, 0, 1, 0, 0);
-  c.clearRect(0, 0, scratch.width, scratch.height);
-  c.imageSmoothingEnabled = false;
-  c.save();
-  c.translate(-bx + pad, -by + pad);
-  fn(c);
-  c.restore();
-  ctx.save();
-  ctx.filter = "brightness(0)";
+  INK = true;
   for (const off of [[-th, 0], [th, 0], [0, -th], [0, th], [-th, -th], [th, th], [-th, th], [th, -th]]) {
-    ctx.drawImage(scratch, 0, 0, w, h, bx - pad + (off[0] ?? 0), by - pad + (off[1] ?? 0), w, h);
+    ctx.save();
+    ctx.translate(off[0] ?? 0, off[1] ?? 0);
+    fn(ctx);
+    ctx.restore();
   }
-  ctx.restore();
-  void ink;
-  ctx.drawImage(scratch, 0, 0, w, h, bx - pad, by - pad, w, h);
+  INK = false;
+  fn(ctx);
 }
 
 export type PlayerState = "idle" | "run" | "jump" | "crouch";
